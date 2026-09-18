@@ -207,7 +207,6 @@
             margin-bottom: 15px;
         }
 
-        /* قائمة الطباعة المنسدلة */
         .dropdown {
             position: relative;
             display: inline-block;
@@ -247,12 +246,11 @@
             display: block;
         }
 
-        /* الجدول والتجميد والتصميم الدقيق بدون فراغات */
         .table-container {
             max-height: 450px;
             overflow-y: auto;
             overflow-x: auto;
-            border: 1px solid #ddd;
+            border: 1px solid #b2babb;
             border-radius: 6px;
             position: relative;
         }
@@ -268,12 +266,11 @@
         th, td {
             padding: 8px 10px;
             text-align: right;
-            border-bottom: 1px solid #ddd;
-            border-left: 1px solid #ddd;
+            border-bottom: 1px solid #b2babb;
+            border-left: 1px solid #b2babb;
             background: #ffffff;
         }
 
-        /* تجميد الهيدر */
         thead th {
             position: sticky;
             top: 0;
@@ -281,9 +278,9 @@
             background: #e9ecef;
             color: var(--primary);
             font-weight: 700;
+            border-bottom: 2px solid #7f8c8d;
         }
 
-        /* تجميد وتصغير عمود التسلسل (ت) بدون فراغات */
         th.col-num, td.col-num {
             position: sticky;
             right: 0;
@@ -293,7 +290,7 @@
             min-width: 35px;
             max-width: 45px;
             text-align: center;
-            border-left: none; /* لمنع أي فراغ ظاهري */
+            border-left: 1px solid #b2babb;
         }
 
         thead th.col-num {
@@ -301,10 +298,9 @@
             background: #dee2e6;
         }
 
-        /* تجميد عمود اسم الطالب ملتصقاً تماماً بعمود التسلسل */
         th.col-name, td.col-name {
             position: sticky;
-            right: 35px; /* ملتصق تماماً بعرض عمود التسلسل */
+            right: 35px;
             z-index: 2;
             background: #f8f9fa;
             width: 120px;
@@ -313,6 +309,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            border-left: 1px solid #b2babb;
         }
 
         thead th.col-name {
@@ -320,7 +317,6 @@
             background: #dee2e6;
         }
 
-        /* حقل الاسم المخفي الذي يظهر كاملاً عند الضغط عليه أو التركيز */
         .editable-name {
             background: transparent;
             border: none;
@@ -453,7 +449,6 @@
         <div id="students" class="tab-content">
             <div class="card">
                 
-                <!-- أزرار التحكم وعمليات الطباعة المنسدلة -->
                 <div class="table-actions-bar no-print">
                     <button class="btn btn-success" onclick="openAddStudentModal()">+ إضافة طالب</button>
                     
@@ -462,7 +457,6 @@
                         <input type="file" id="fileImportInput" accept=".txt,.doc,.docx" style="display: none;" onchange="importFromFile(event)">
                     </label>
 
-                    <!-- زر الطباعة المنسدل الواحد -->
                     <div class="dropdown">
                         <button class="btn" style="background: #2980b9;">🖨️ خيارات الطباعة ▾</button>
                         <div class="dropdown-content">
@@ -474,7 +468,6 @@
 
                 <div style="font-weight: 600; color: #555; margin-bottom: 10px;" id="classStudentCountInfo">الشعبة ١ - ٠ طالب</div>
 
-                <!-- الجدول -->
                 <div id="printableArea" class="table-container">
                     <table>
                         <thead>
@@ -489,11 +482,10 @@
                                 <th>شهر ٣</th>
                                 <th>شهر ٤</th>
                                 <th>النهائي</th>
-                                <th class="no-print">إجراء</th>
+                                <th>ملاحظات</th>
                             </tr>
                         </thead>
                         <tbody id="studentsTableBody">
-                            <!-- صفوف الطلاب -->
                         </tbody>
                     </table>
                 </div>
@@ -531,7 +523,6 @@
     </div>
 
     <script>
-        // دالة تحويل الأرقام الإنجليزية إلى العربية الهندية (٠, ١, ٢, ...)
         function toArabicNumerals(num) {
             const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
             return String(num).replace(/\d/g, (digit) => arabicNumbers[digit]);
@@ -646,7 +637,8 @@
                         midterm: rows[i].querySelector('.col-midterm')?.value || '',
                         m3: rows[i].querySelector('.col-m3')?.value || '',
                         m4: rows[i].querySelector('.col-m4')?.value || '',
-                        final: rows[i].querySelector('.col-final')?.value || ''
+                        final: rows[i].querySelector('.col-final')?.value || '',
+                        note: rows[i].querySelector('.col-note')?.value || ''
                     });
                 }
             }
@@ -654,7 +646,6 @@
         }
 
         function saveStudentsList(students) {
-            // ترتيب أبجدي تصاعدي من الألف إلى الياء
             students.sort((a, b) => a.name.localeCompare(b.name, 'ar'));
 
             const tbody = document.getElementById('studentsTableBody');
@@ -674,11 +665,15 @@
                     <td><input type="text" class="editable-cell col-m3" value="${st.m3}" onblur="saveStudentsToStorage()"></td>
                     <td><input type="text" class="editable-cell col-m4" value="${st.m4}" onblur="saveStudentsToStorage()"></td>
                     <td><input type="text" class="editable-cell col-final" value="${st.final}" onblur="saveStudentsToStorage()"></td>
-                    <td class="no-print"><button class="btn btn-danger" style="padding: 2px 6px; font-size: 0.75rem;" onclick="confirmDeleteStudent(this)">حذف</button></td>
+                    <td>
+                        <div style="display: flex; gap: 5px; align-items: center;">
+                            <input type="text" class="editable-cell col-note" value="${st.note || ''}" onblur="saveStudentsToStorage()">
+                            <button class="btn btn-danger no-print" style="padding: 2px 6px; font-size: 0.75rem;" onclick="confirmDeleteStudent(this)">حذف</button>
+                        </div>
+                    </td>
                 `;
             });
 
-            // صفوف النتائج النهائية
             const specialRows = [
                 "النتيجة النهائية (avg1)",
                 "النتيجة النهائية (mid)",
@@ -699,7 +694,7 @@
                     <td><input type="text" class="editable-cell" onblur="saveStudentsToStorage()"></td>
                     <td><input type="text" class="editable-cell" onblur="saveStudentsToStorage()"></td>
                     <td><input type="text" class="editable-cell" onblur="saveStudentsToStorage()"></td>
-                    <td class="no-print"></td>
+                    <td><input type="text" class="editable-cell" onblur="saveStudentsToStorage()"></td>
                 `;
             });
 
@@ -713,7 +708,7 @@
                 let students = getStudentsData();
                 students.push({
                     name: name.trim(),
-                    oral1: '', m1: '', m2: '', oral2: '', midterm: '', m3: '', m4: '', final: ''
+                    oral1: '', m1: '', m2: '', oral2: '', midterm: '', m3: '', m4: '', final: '', note: ''
                 });
                 saveStudentsList(students);
                 alert('تمت إضافة الطالب وترتيبه أبجدياً بنجاح');
@@ -735,7 +730,7 @@
                     if(name) {
                         students.push({
                             name: name,
-                            oral1: '', m1: '', m2: '', oral2: '', midterm: '', m3: '', m4: '', final: ''
+                            oral1: '', m1: '', m2: '', oral2: '', midterm: '', m3: '', m4: '', final: '', note: ''
                         });
                     }
                 });
@@ -748,7 +743,7 @@
 
         function confirmDeleteStudent(btn) {
             if(confirm('تنبيه: هل أنت متأكد من حذف هذا الطالب؟')) {
-                btn.parentElement.parentElement.remove();
+                btn.parentElement.parentElement.parentElement.remove();
                 let students = getStudentsData();
                 saveStudentsList(students);
             }
@@ -822,7 +817,7 @@
                 document.getElementById('studentsTableBody').innerHTML = localStorage.getItem('savedStudentsHTML');
             } else {
                 let defaultStudents = [
-                    { name: 'محمد علي حسن', oral1: '', m1: '', m2: '', oral2: '', midterm: '', m3: '', m4: '', final: '' }
+                    { name: 'احسان الدين محمد', oral1: '', m1: '', m2: '', oral2: '', midterm: '', m3: '', m4: '', final: '', note: '' }
                 ];
                 saveStudentsList(defaultStudents);
             }
