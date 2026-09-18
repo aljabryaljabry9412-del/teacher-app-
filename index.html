@@ -14,7 +14,7 @@
             --bg: #f4f6f7;
             --card-bg: #ffffff;
             --text: #2c3e50;
-            --border: #bdc3c7;
+            --border: #34495e;
         }
 
         * {
@@ -250,7 +250,7 @@
             max-height: 450px;
             overflow-y: auto;
             overflow-x: auto;
-            border: 1px solid #b2babb;
+            border: 2px solid #2c3e50;
             border-radius: 6px;
             position: relative;
         }
@@ -263,11 +263,12 @@
             white-space: nowrap;
         }
 
+        /* خطوط واضحة وصريحة لكل خلايا الجدول */
         th, td {
             padding: 8px 10px;
             text-align: right;
-            border-bottom: 1px solid #b2babb;
-            border-left: 1px solid #b2babb;
+            border-bottom: 2px solid #bdc3c7 !important;
+            border-left: 2px solid #bdc3c7 !important;
             background: #ffffff;
         }
 
@@ -275,10 +276,10 @@
             position: sticky;
             top: 0;
             z-index: 3;
-            background: #e9ecef;
+            background: #d6dbdf;
             color: var(--primary);
             font-weight: 700;
-            border-bottom: 2px solid #7f8c8d;
+            border-bottom: 3px solid #2c3e50 !important;
         }
 
         th.col-num, td.col-num {
@@ -286,21 +287,21 @@
             right: 0;
             z-index: 2;
             background: #f8f9fa;
-            width: 35px;
-            min-width: 35px;
+            width: 40px;
+            min-width: 40px;
             max-width: 45px;
             text-align: center;
-            border-left: 1px solid #b2babb;
+            border-left: 2px solid #2c3e50 !important;
         }
 
         thead th.col-num {
             z-index: 4;
-            background: #dee2e6;
+            background: #bdc3c7;
         }
 
         th.col-name, td.col-name {
             position: sticky;
-            right: 35px;
+            right: 40px;
             z-index: 2;
             background: #f8f9fa;
             width: 120px;
@@ -309,12 +310,12 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            border-left: 1px solid #b2babb;
+            border-left: 2px solid #2c3e50 !important;
         }
 
         thead th.col-name {
             z-index: 4;
-            background: #dee2e6;
+            background: #bdc3c7;
         }
 
         .editable-name {
@@ -335,7 +336,7 @@
             background: #fff;
             border: 1px dashed var(--secondary);
             position: absolute;
-            right: 35px;
+            right: 40px;
             z-index: 5;
             width: 250px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
@@ -795,6 +796,9 @@
         }
 
         window.onload = function() {
+            // مسح الذاكرة القديمة للجدول إجبارياً لتطبيق التعديلات الجديدة وتفادي البيانات المعلقة
+            localStorage.removeItem('savedStudentsHTML');
+
             if(localStorage.getItem('schoolName')) {
                 document.getElementById('displaySchoolName').innerText = localStorage.getItem('schoolName');
                 document.getElementById('settingsSchool').value = localStorage.getItem('schoolName');
@@ -813,14 +817,12 @@
                 output.style.display = 'block';
                 document.getElementById('logoPlaceholder').style.display = 'none';
             }
-            if(localStorage.getItem('savedStudentsHTML')) {
-                document.getElementById('studentsTableBody').innerHTML = localStorage.getItem('savedStudentsHTML');
-            } else {
-                let defaultStudents = [
-                    { name: 'احسان الدين محمد', oral1: '', m1: '', m2: '', oral2: '', midterm: '', m3: '', m4: '', final: '', note: '' }
-                ];
-                saveStudentsList(defaultStudents);
-            }
+
+            let defaultStudents = [
+                { name: 'احسان الدين محمد', oral1: '', m1: '', m2: '', oral2: '', midterm: '', m3: '', m4: '', final: '', note: '' }
+            ];
+            saveStudentsList(defaultStudents);
+
             if(localStorage.getItem('classStage')) {
                 document.getElementById('classStageInput').value = localStorage.getItem('classStage');
             }
