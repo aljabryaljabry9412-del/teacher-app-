@@ -3,1123 +3,459 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>برنامج سجل المدرس</title>
-    
-    <!-- خط النسخ من جوجل فونتس -->
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
-    
-    <!-- إعدادات PWA للأيقونة -->
-    <meta name="theme-color" content="#2c3e50">
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon.png">
-
+    <title>سجل المدرس المتطور</title>
+    <!-- خط العرض -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #2c3e50;
-            --secondary: #34495e;
-            --accent: #3498db;
-            --danger: #e74c3c;
-            --success: #2ecc71;
-            --bg: #f5f6fa;
-            --text: #2c3e50;
+            --primary: #1e3a8a;
+            --secondary: #3b82f6;
+            --accent: #10b981;
+            --danger: #ef4444;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --border: #cbd5e1;
         }
 
         * {
             box-sizing: border-box;
-            font-family: 'Amiri', serif; /* تطبيق خط النسخ */
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
         }
 
         body {
             background-color: var(--bg);
             color: var(--text);
-            margin: 0;
-            padding: 0;
-        }
-
-        /* ---------------- الهيدر الثابت في الأعلى ---------------- */
-        .fixed-header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background: white;
-            border-bottom: 2px solid #ddd;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        .header-info {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .header-info div {
+            direction: rtl;
+            width: 100vw;
+            min-height: 100vh;
+            overflow-x: hidden;
             display: flex;
             flex-direction: column;
         }
 
-        .header-info label {
-            font-size: 12px;
-            color: #7f8c8d;
-        }
-
-        .header-info span, .header-info input {
-            font-size: 16px;
-            font-weight: bold;
-            border: none;
-            background: transparent;
-            color: var(--primary);
-            outline: none;
-        }
-
-        .header-info input:focus {
-            border-bottom: 1px dashed var(--accent);
-        }
-
-        .school-logo-container {
-            position: relative;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 2px solid var(--accent);
-            background: #eee;
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 20px;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            width: 100%;
         }
 
-        .school-logo-container img {
-            width: 100%;
-            height: 100%;
+        .header-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .school-title {
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+        }
+
+        .sub-header-info {
+            font-size: 0.95rem;
+            font-weight: 600;
+            opacity: 0.9;
+            display: flex;
+            gap: 15px;
+        }
+
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .logo-preview {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
             object-fit: cover;
+            border: 2px solid white;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #64748b;
+            text-align: center;
         }
 
-        .school-logo-container input[type="file"] {
-            position: absolute;
-            opacity: 0;
-            width: 100%;
-            height: 100%;
+        .logo-upload-btn {
+            font-size: 0.75rem;
+            background: rgba(255,255,255,0.2);
+            padding: 2px 8px;
+            border-radius: 4px;
             cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.4);
         }
 
-        /* ---------------- شريط التبويبات ---------------- */
-        .tabs-bar {
-            background: var(--secondary);
+        .logo-upload-btn input {
+            display: none;
+        }
+
+        nav {
+            background: #ffffff;
             display: flex;
             overflow-x: auto;
-            padding: 0 10px;
+            padding: 10px;
+            gap: 10px;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            width: 100%;
         }
 
-        .tab-btn {
-            background: transparent;
+        nav button {
+            background: #f1f5f9;
             border: none;
-            color: white;
-            padding: 12px 20px;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 16px;
             white-space: nowrap;
-            transition: background 0.3s;
+            transition: all 0.3s ease;
+            color: #475569;
         }
 
-        .tab-btn:hover, .tab-btn.active {
-            background: var(--accent);
+        nav button.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 2px 4px rgba(30,58,138,0.3);
         }
 
-        /* محتوى التبويبات */
+        .main-container {
+            flex: 1;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
         .tab-content {
             display: none;
-            padding: 20px;
-            max-width: 100%;
-            overflow-x: auto;
+            animation: fadeIn 0.4s ease-in-out;
         }
 
         .tab-content.active {
             display: block;
         }
 
-        /* ---------------- عام وتنسيق الجداول ---------------- */
-        h2, h3 {
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+            border: 1px solid #e2e8f0;
+        }
+
+        .card h3 {
+            margin-bottom: 15px;
             color: var(--primary);
+            font-size: 1.2rem;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 8px;
         }
 
-        input, select, button {
-            font-family: 'Amiri', serif;
-            padding: 8px;
-            margin: 5px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+        .form-group {
+            margin-bottom: 15px;
         }
 
-        button {
-            background: var(--accent);
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+        }
+
+        .btn {
+            background: var(--secondary);
             color: white;
             border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
             cursor: pointer;
-            transition: opacity 0.2s;
+            transition: background 0.2s;
         }
 
-        button:hover {
+        .btn:hover {
             opacity: 0.9;
         }
 
-        .btn-danger { background: var(--danger); }
-        .btn-success { background: var(--success); }
+        .btn-danger {
+            background: var(--danger);
+        }
 
-        /* تنسيق جدول الدرجات مع التجميد */
-        .table-container {
-            max-height: 500px;
-            overflow: auto;
-            border: 1px solid #ddd;
-            background: white;
-            margin-top: 15px;
+        .btn-success {
+            background: var(--accent);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            text-align: center;
-            font-size: 14px;
+            margin-top: 10px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
         }
 
         th, td {
-            border: 1px solid #bdc3c7;
-            padding: 6px 4px;
-            min-width: 50px;
+            padding: 12px 15px;
+            text-align: right;
+            border-bottom: 1px solid #e2e8f0;
         }
 
-        /* تجميد رأس الجدول (الصف العلوي) */
-        thead th {
-            position: sticky;
-            top: 0;
-            background: var(--primary);
-            color: white;
-            z-index: 10;
+        th {
+            background: #f1f5f9;
+            color: var(--primary);
+            font-weight: 700;
         }
 
-        /* تجميد عمود التسلسل والاسم (اليمين) */
-        th.sticky-col-1, td.sticky-col-1 {
-            position: sticky;
-            right: 0;
-            background: #ecf0f1;
-            z-index: 5;
-            min-width: 40px;
-        }
-        th.sticky-col-2, td.sticky-col-2 {
-            position: sticky;
-            right: 40px;
-            background: #ecf0f1;
-            z-index: 5;
-            min-width: 120px;
-        }
-        thead th.sticky-col-1, thead th.sticky-col-2 {
-            background: var(--secondary);
-            z-index: 15;
-        }
-
-        .grade-input {
-            width: 45px;
-            text-align: center;
-            padding: 2px;
-            font-size: 14px;
-        }
-
-        .text-red {
-            color: var(--danger);
-            font-weight: bold;
-        }
-
-        .text-black {
-            color: var(--text);
-        }
-
-        /* تحويل الأرقام للهندية برمجياً أو عرضياً */
-        .arabic-numbers {
-            direction: rtl;
-        }
-
-        /* ---------------- تخصيص الطباعة Print CSS ---------------- */
-        @media print {
-            .no-print, .fixed-header, .tabs-bar, button, input, select {
-                display: none !important;
+        @media (max-width: 768px) {
+            header {
+                flex-direction: row;
+                padding: 10px 15px;
             }
-            body {
-                background: white;
-                padding: 0;
+            .school-title {
+                font-size: 1.2rem;
             }
-            .tab-content {
-                display: none !important;
+            .sub-header-info {
+                font-size: 0.8rem;
+                flex-direction: column;
+                gap: 2px;
             }
-            #grades-tab {
-                display: block !important;
-                padding: 0;
+            .main-container {
+                padding: 10px;
             }
-            .table-container {
-                max-height: none;
-                overflow: visible;
-                border: none;
-            }
-            table {
-                width: 100% !important;
-                font-size: 12px;
-            }
-            th, td {
-                border: 1px solid #000 !important;
-            }
-            .print-header {
-                display: block !important;
-                text-align: center;
-                margin-bottom: 20px;
-            }
-        }
-
-        .print-header {
-            display: none;
         }
     </style>
 </head>
 <body>
 
-<!-- الهيدر الثابت -->
-<div class="fixed-header">
-    <div class="header-info">
-        <div>
-            <label>اسم المدرسة:</label>
-            <input type="text" id="schoolNameInput" value="مدرسة الإبداع الابتدائية">
-        </div>
-        <div>
-            <label>اسم المدرس:</label>
-            <input type="text" id="teacherNameInput" value="أحمد محمد">
-        </div>
-        <div>
-            <label>اسم المادة:</label>
-            <input type="text" id="subjectNameInput" value="الرياضيات">
-        </div>
-    </div>
-    <div class="school-logo-container" title="اضغط لتغيير شعار المدرسة">
-        <img id="schoolLogoImg" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60'><rect width='100%' height='100%' fill='%23ccc'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='12' fill='%23666'>شعار</text></svg>" alt="شعار">
-        <input type="file" id="logoUpload" accept="image/*">
-    </div>
-</div>
-
-<!-- شريط التبويبات -->
-<div class="tabs-bar no-print">
-    <button class="tab-btn active" onclick="switchTab(event, 'home-tab')">الصفحة الرئيسية</button>
-    <button class="tab-btn" onclick="switchTab(event, 'grades-tab')">الأسماء والدرجات</button>
-    <button class="tab-btn" onclick="switchTab(event, 'daily-tab')">الاختبار اليومي</button>
-    <button class="tab-btn" onclick="switchTab(event, 'attendance-tab')">سجل الحضور</button>
-    <button class="tab-btn" onclick="switchTab(event, 'absent-records-tab')">سجل الغياب</button>
-    <button class="tab-btn" onclick="switchTab(event, 'backup-tab')">النسخ الاحتياطي</button>
-    <button class="tab-btn" onclick="switchTab(event, 'cloud-tab')">النسخ السحابي</button>
-</div>
-
-<!-- 1. الصفحة الرئيسية -->
-<div id="home-tab" class="tab-content active">
-    <h2>الصفحة الرئيسية</h2>
-    
-    <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-        <h3>البحث عن طالب</h3>
-        <input type="text" id="searchStudentInput" placeholder="ابحث باسم الطالب لعرض بياناته..." oninput="searchStudent()" style="width: 100%;">
-        <div id="searchResult" style="margin-top: 10px; font-weight: bold; color: var(--accent);"></div>
-    </div>
-
-    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-        <!-- إدارة المراحل -->
-        <div style="background: white; padding: 15px; border-radius: 8px; flex: 1; min-width: 250px;">
-            <h3>المرحلة الدراسية</h3>
-            <select id="gradeLevelSelect" style="width: 100%;" onchange="highlightSelection()"></select>
-            <input type="text" id="newGradeInput" placeholder="مرحلة جديدة...">
-            <button onclick="addGradeLevel()">إضافة مرحلة</button>
-            <button class="btn-danger" onclick="deleteGradeLevel()">حذف المحددة</button>
-        </div>
-
-        <!-- إدارة الشعب -->
-        <div style="background: white; padding: 15px; border-radius: 8px; flex: 1; min-width: 250px;">
-            <h3>الشعبة (اختيارية)</h3>
-            <select id="sectionSelect" style="width: 100%;" onchange="highlightSelection()"></select>
-            <input type="text" id="newSectionInput" placeholder="شعبة جديدة...">
-            <button onclick="addSection()">إضافة شعبة</button>
-            <button class="btn-danger" onclick="deleteSection()">حذف المحددة</button>
-        </div>
-    </div>
-</div>
-
-<!-- 2. تبويب الأسماء والدرجات -->
-<div id="grades-tab" class="tab-content">
-    <div class="print-header">
-        <h1 id="printSchoolTitle">المدرسة</h1>
-        <p>المدرس: <span id="printTeacher"></span> | المادة: <span id="printSubject"></span></p>
-        <hr>
-    </div>
-
-    <h2>قائمة الأسماء والدرجات</h2>
-    <div class="no-print" style="margin-bottom: 10px; display: flex; gap: 10px; flex-wrap: wrap;">
-        <input type="text" id="manualNameInput" placeholder="اسم الطالب الجديد...">
-        <button onclick="addStudentManual()">إضافة يدوي</button>
-        <input type="file" id="importFile" accept=".txt,.doc,.docx" style="display:none;" onchange="importNamesFile(event)">
-        <button onclick="document.getElementById('importFile').click()" class="btn-success">استيراد من ملف (txt/doc)</button>
-        <button onclick="window.print()" class="btn-success">🖨️ طباعة الجدول (A4)</button>
-    </div>
-
-    <div class="table-container">
-        <table id="mainGradesTable">
-            <thead>
-                <tr>
-                    <th class="sticky-col-1">ت</th>
-                    <th class="sticky-col-2">اسم الطالب</th>
-                    <th>شفهي 1</th>
-                    <th>شهر 1</th>
-                    <th>شفهي 2</th>
-                    <th>شهر 2</th>
-                    <th>م.فصل 1</th>
-                    <th>نصف السنة</th>
-                    <th>شفهي 1</th>
-                    <th>شهر 1</th>
-                    <th>شفهي 2</th>
-                    <th>شهر 2</th>
-                    <th>م.فصل 2</th>
-                    <th>السعي السنوي</th>
-                    <th>ملاحظات</th>
-                    <th class="no-print">إجراء</th>
-                </tr>
-            </thead>
-            <tbody id="gradesTableBody">
-                <!-- يتم تعبئتها برمجياً -->
-            </tbody>
-            <tfoot id="gradesTableFooter">
-                <!-- الإحصائيات (ناجحين، راسبين، نسب) -->
-            </tfoot>
-        </table>
-    </div>
-</div>
-
-<!-- 3. تبويب الاختبار اليومي -->
-<div id="daily-tab" class="tab-content">
-    <h2>الاختبار اليومي (الشفهي)</h2>
-    <div style="background: white; padding: 20px; border-radius: 8px; max-width: 400px; margin: 0 auto; text-align: center;">
-        <h3 id="dailyStudentName" style="font-size: 24px; color: var(--accent);">اختر البدء للعرض العشوائي</h3>
-        <input type="number" id="dailyGradeInput" min="0" max="100" placeholder="أدخل درجة الشفهي (0-100)" style="width: 100%; font-size: 18px; text-align: center;">
-        <br>
-        <button onclick="saveDailyGrade()" class="btn-success" style="width: 100%; padding: 10px; font-size: 16px; margin-top: 10px;">حفظ والانتقال للتالي</button>
-        <button onclick="startDailyTest()" style="width: 100%; padding: 10px; font-size: 16px; margin-top: 5px;">بدء / إعادة تدوير الأسماء</button>
-    </div>
-</div>
-
-<!-- 4. تبويب سجل الحضور -->
-<div id="attendance-tab" class="tab-content">
-    <h2>سجل الحضور اليومي</h2>
-    <div id="attendanceContainer" style="background: white; padding: 20px; border-radius: 8px; max-width: 500px; margin: 0 auto; text-align: center;">
-        <!-- يتم توليده برمجياً لكل طالب -->
-    </div>
-    <div style="text-align: center; margin-top: 15px;">
-        <button onclick="prevAttendanceStudent()" class="no-print">العودة إلى الخلف</button>
-    </div>
-    <div id="attendanceReport" style="margin-top: 20px;"></div>
-</div>
-
-<!-- 5. تبويب سجل الغياب -->
-<div id="absent-records-tab" class="tab-content">
-    <h2>سجل الغياب والتقاط الصور</h2>
-    <div style="margin-bottom: 15px;" class="no-print">
-        <label>اختر التاريخ:</label>
-        <input type="date" id="recordDateFilter" onchange="renderAbsentRecords()">
-    </div>
-    <div id="absentRecordsContent" style="background: white; padding: 15px; border-radius: 8px;">
-        <!-- عرض السجلات والصورة المرفقة -->
-    </div>
-    <div class="no-print" style="margin-top: 15px; background: white; padding: 15px; border-radius: 8px;">
-        <h3>إرفاق صورة بالسجل الحالي</h3>
-        <input type="file" id="recordCameraInput" accept="image/*">
-        <button onclick="attachImageToRecord()" class="btn-success">حفظ الصورة مع السجل</button>
-    </div>
-</div>
-
-<!-- 6. النسخ الاحتياطي -->
-<div id="backup-tab" class="tab-content">
-    <h2>النسخ الاحتياطي واستعادة البيانات</h2>
-    <div style="background: white; padding: 20px; border-radius: 8px;">
-        <button onclick="exportJSON()" class="btn-success">تصدير البيانات كملف JSON</button>
-        <br><br>
-        <label>استيراد ملف سابق:</label>
-        <input type="file" id="importJSONFile" accept=".json" onchange="importJSON(event)">
-    </div>
-</div>
-
-<!-- 7. النسخ السحابي -->
-<div id="cloud-tab" class="tab-content">
-    <h2>النسخ السحابي والاتصال</h2>
-    <div style="background: white; padding: 20px; border-radius: 8px;">
-        <label>
-            <input type="checkbox" id="cloudToggle" checked onchange="toggleCloudSync()"> تفعيل النسخ السحابي التلقائي
-        </label>
-        <p>حالة الاتصال: <span id="netStatus" style="font-weight:bold; color: green;">متصل بالإنترنت 🌐</span></p>
-        <p>ملاحظة: يعمل البرنامج محلياً بالكامل وعند توفر الإنترنت تتم مزامنة التعديلات تلقائياً.</p>
-    </div>
-</div>
-
-<script>
-    // ------------------- البيانات الأساسية وLocal Storage -------------------
-    let appData = JSON.parse(localStorage.getItem('teacherApp_data')) || {
-        schoolName: "مدرسة الإبداع الابتدائية",
-        teacherName: "أحمد محمد",
-        subjectName: "الرياضيات",
-        logo: "",
-        gradeLevels: ["الصف الأول الابتدائي", "الصف الثاني الابتدائي", "الصف الثالث الابتدائي"],
-        selectedGradeLevel: "الصف الأول الابتدائي",
-        sections: ["أ", "ب", "ج"],
-        selectedSection: "أ",
-        students: [], // {id, name, grades: [12 values], notes: []}
-        attendanceLogs: {}, // date: {present: [], absent: []}
-        recordImages: {} // date: base64Image
-    };
-
-    // تحويل الأرقام الإنجليزية إلى الأرقام الهندية (العربية المشرقية) عند العرض
-    function toEasternArabicNumerals(num) {
-        if (num === undefined || num === null || isNaN(num)) return '٠';
-        const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
-        return num.toString().replace(/\d/g, (x) => arabicNumbers[x]);
-    }
-
-    // تهيئة الواجهة
-    window.onload = function() {
-        document.getElementById('schoolNameInput').value = appData.schoolName;
-        document.getElementById('teacherNameInput').value = appData.teacherName;
-        document.getElementById('subjectNameInput').value = appData.subjectName;
-        if(appData.logo) document.getElementById('schoolLogoImg').src = appData.logo;
-
-        updateDropdowns();
-        renderStudentsTable();
-        initAttendance();
-        
-        // ربط تحديث الهيدر
-        document.getElementById('schoolNameInput').oninput = (e) => { appData.schoolName = e.target.value; saveData(); };
-        document.getElementById('teacherNameInput').oninput = (e) => { appData.teacherName = e.target.value; saveData(); };
-        document.getElementById('subjectNameInput').oninput = (e) => { appData.subjectName = e.target.value; saveData(); };
-        
-        // شعار المدرسة
-        document.getElementById('logoUpload').onchange = function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    appData.logo = event.target.result;
-                    document.getElementById('schoolLogoImg').src = appData.logo;
-                    saveData();
-                }
-                reader.readAsDataURL(file);
-            }
-        };
-
-        // تاريخ اليوم في سجل الغياب
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('recordDateFilter').value = today;
-        renderAbsentRecords();
-    };
-
-    function saveData() {
-        localStorage.setItem('teacherApp_data', JSON.stringify(appData));
-        // محاكاة رفع سحابي فوري إذا كان مفعل
-        if(document.getElementById('cloudToggle').checked && navigator.onLine) {
-            console.log("تم رفع التعديلات سحابياً تلقائياً.");
-        }
-    }
-
-    // التنقل بين التبويبات
-    function switchTab(evt, tabId) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-        evt.currentTarget.classList.add('active');
-
-        if(tabId === 'attendance-tab') initAttendance();
-        if(tabId === 'absent-records-tab') renderAbsentRecords();
-    }
-
-    // ------------------- الصفحة الرئيسية والمراحل/الشعب -------------------
-    function updateDropdowns() {
-        const gradeSelect = document.getElementById('gradeLevelSelect');
-        gradeSelect.innerHTML = '';
-        appData.gradeLevels.forEach(lvl => {
-            const opt = document.createElement('option');
-            opt.value = lvl;
-            opt.innerText = lvl;
-            if(lvl === appData.selectedGradeLevel) opt.selected = true;
-            gradeSelect.appendChild(opt);
-        });
-
-        const secSelect = document.getElementById('sectionSelect');
-        secSelect.innerHTML = '';
-        appData.sections.forEach(sec => {
-            const opt = document.createElement('option');
-            opt.value = sec;
-            opt.innerText = sec;
-            if(sec === appData.selectedSection) opt.selected = true;
-            secSelect.appendChild(opt);
-        });
-        highlightSelection();
-    }
-
-    function highlightSelection() {
-        appData.selectedGradeLevel = document.getElementById('gradeLevelSelect').value;
-        appData.selectedSection = document.getElementById('sectionSelect').value;
-        saveData();
-    }
-
-    function addGradeLevel() {
-        const val = document.getElementById('newGradeInput').value.trim();
-        if(val && !appData.gradeLevels.includes(val)) {
-            if(confirm("هل أنت متأكد من إضافة هذه المرحلة؟")) {
-                appData.gradeLevels.push(val);
-                document.getElementById('newGradeInput').value = '';
-                updateDropdowns();
-                saveData();
-            }
-        }
-    }
-
-    function deleteGradeLevel() {
-        const val = document.getElementById('gradeLevelSelect').value;
-        if(confirm("هل أنت متأكد من حذف هذه المرحلة؟ لا يمكن التراجع إلا بالتأكيد.")) {
-            appData.gradeLevels = appData.gradeLevels.filter(x => x !== val);
-            updateDropdowns();
-            saveData();
-        }
-    }
-
-    function addSection() {
-        const val = document.getElementById('newSectionInput').value.trim();
-        if(val && !appData.sections.includes(val)) {
-            if(confirm("هل أنت متأكد من إضافة هذه الشعبة؟")) {
-                appData.sections.push(val);
-                document.getElementById('newSectionInput').value = '';
-                updateDropdowns();
-                saveData();
-            }
-        }
-    }
-
-    function deleteSection() {
-        const val = document.getElementById('sectionSelect').value;
-        if(confirm("هل أنت متأكد من حذف هذه الشعبة؟")) {
-            appData.sections = appData.sections.filter(x => x !== val);
-            updateDropdowns();
-            saveData();
-        }
-    }
-
-    function searchStudent() {
-        const query = document.getElementById('searchStudentInput').value.trim().toLowerCase();
-        const resDiv = document.getElementById('searchResult');
-        if(!query) { resDiv.innerHTML = ''; return; }
-        
-        const found = appData.students.find(s => s.name.toLowerCase().includes(query));
-        if(found) {
-            resDiv.innerHTML = `الطالب: ${found.name} | السعي السنوي: ${toEasternArabicNumerals(calculateAnnualAverage(found.grades))} | الملاحظات: ${found.notes.join(', ') || 'لا توجد'}`;
-        } else {
-            resDiv.innerHTML = "لم يتم العثور على الطالب.";
-        }
-    }
-
-    // ------------------- تبويب الأسماء والدرجات والحسابات -------------------
-    function addStudentManual() {
-        const nameInput = document.getElementById('manualNameInput');
-        const name = nameInput.value.trim();
-        if(!name) return;
-
-        appData.students.push({
-            id: Date.now(),
-            name: name,
-            grades: new Array(12).fill(0),
-            notes: []
-        });
-        // ترتيب أبجدي مباشر من الالف الى الياء
-        appData.students.sort((a, b) => a.name.localeCompare(b.name, 'ar'));
-        nameInput.value = '';
-        renderStudentsTable();
-        saveData();
-    }
-
-    function importNamesFile(e) {
-        const file = e.target.files[0];
-        if(!file) return;
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            const text = event.target.result;
-            const names = text.split(/\r?\n/).map(n => n.trim()).filter(n => n);
-            if(confirm(`هل أنت متأكد من استيراد ${names.length} اسم وترتيبها أبجدياً؟`)) {
-                names.forEach(n => {
-                    appData.students.push({
-                        id: Date.now() + Math.random(),
-                        name: n,
-                        grades: new Array(12).fill(0),
-                        notes: []
-                    });
-                });
-                appData.students.sort((a, b) => a.name.localeCompare(b.name, 'ar'));
-                renderStudentsTable();
-                saveData();
-            }
-        };
-        reader.readAsText(file);
-    }
-
-    function deleteStudent(id) {
-        if(confirm("هل أنت متأكد من حذف هذا الاسم؟ لا يمكن التراجع إلا بعد التأكيد.")) {
-            appData.students = appData.students.filter(s => s.id !== id);
-            renderStudentsTable();
-            saveData();
-        }
-    }
-
-    function updateStudentGrade(studentId, gradeIndex, val) {
-        let num = parseFloat(val);
-        // التحقق برمجياً أن الدرجة محصورة بين 0 و 100 ومنع النصوص
-        if(isNaN(num) || num < 0 || num > 100) {
-            alert("خطأ: يجب أن تكون الدرجة قيمة رقمية محصورة حصراً بين 0 و 100!");
-            renderStudentsTable();
-            return;
-        }
-        const student = appData.students.find(s => s.id === studentId);
-        if(student) {
-            student.grades[gradeIndex] = num;
-            renderStudentsTable();
-            saveData();
-        }
-    }
-
-    function updateStudentName(studentId, newName) {
-        if(confirm("هل أنت متأكد من تعديل اسم الطالب؟")) {
-            const student = appData.students.find(s => s.id === studentId);
-            if(student) {
-                student.name = newName;
-                appData.students.sort((a, b) => a.name.localeCompare(b.name, 'ar'));
-                renderStudentsTable();
-                saveData();
-            }
-        }
-    }
-
-    // حساب معدل الفصل الأول (حقول 0,1,2,3 مقسومة على 4 ومقربة لأقرب عشرة)
-    function calculateFirstTermAvg(grades) {
-        const sum = grades[0] + grades[1] + grades[2] + grades[3];
-        const avg = sum / 4;
-        return Math.round(avg * 10) / 10;
-    }
-
-    // حساب معدل الفصل الثاني (حقول 6,7,8,9 مقسومة على 4 ومقربة لأقرب عشرة)
-    function calculateSecondTermAvg(grades) {
-        const sum = grades[6] + grades[7] + grades[8] + grades[9];
-        const avg = sum / 4;
-        return Math.round(avg * 10) / 10;
-    }
-
-    // السعي السنوي: (معدل الفصل الأول + نصف السنة + معدل الفصل الثاني) / 3 مقرب لأقرب عشرة
-    function calculateAnnualAverage(grades) {
-        const t1 = calculateFirstTermAvg(grades);
-        const midYear = grades[4];
-        const t2 = calculateSecondTermAvg(grades);
-        const sum = t1 + midYear + t2;
-        const avg = sum / 3;
-        return Math.round(avg * 10) / 10;
-    }
-
-    function renderStudentsTable() {
-        const tbody = document.getElementById('gradesTableBody');
-        const tfoot = document.getElementById('gradesTableFooter');
-        tbody.innerHTML = '';
-
-        document.getElementById('printSchoolTitle').innerText = appData.schoolName;
-        document.getElementById('printTeacher').innerText = appData.teacherName;
-        document.getElementById('printSubject').innerText = appData.subjectName;
-
-        let totalStudents = appData.students.length;
-        
-        // إحصائيات الأعمدة: م.فصل1 [index 4], نصف سنة [index 5], م.فصل2 [index 10], السعي السنوي [index 11 معتمد]
-        let passT1 = 0, failT1 = 0;
-        let passMid = 0, failMid = 0;
-        let passT2 = 0, failT2 = 0;
-        let passAnnual = 0, failAnnual = 0;
-
-        appData.students.forEach((st, idx) => {
-            const t1Avg = calculateFirstTermAvg(st.grades);
-            const midYear = st.grades[4];
-            const t2Avg = calculateSecondTermAvg(st.grades);
-            const annual = calculateAnnualAverage(st.grades);
-
-            if(t1Avg >= 50) passT1++; else failT1++;
-            if(midYear >= 50) passMid++; else failMid++;
-            if(t2Avg >= 50) passT2++; else failT2++;
-            if(annual >= 50) passAnnual++; else failAnnual++;
-
-            const row = document.createElement('tr');
-            
-            let htmlCols = `
-                <td class="sticky-col-1">${toEasternArabicNumerals(idx + 1)}</td>
-                <td class="sticky-col-2"><input type="text" value="${st.name}" onchange="updateStudentName(${st.id}, this.value)" style="width:110px; border:none; background:transparent;"></td>
-            `;
-
-            // 12 حقل للدرجات
-            for(let i=0; i<12; i++) {
-                if(i === 4) {
-                    // حقل معدل الفصل الأول (محسوب)
-                    htmlCols += `<td class="${t1Avg < 50 ? 'text-red' : 'text-black'}">${toEasternArabicNumerals(t1Avg)}</td>`;
-                    // حقل نصف السنة
-                    htmlCols += `<td><input type="number" class="grade-input ${st.grades[4] < 50 ? 'text-red' : ''}" value="${st.grades[4]}" min="0" max="100" onchange="updateStudentGrade(${st.id}, 4, this.value)"></td>`;
-                } else if(i === 9) {
-                    // حقل معدل الفصل الثاني (محسوب) بعد الشهر الثاني
-                    // الحقول الاربعة للفصل الثاني هي: شفهي1 (6), شهر1 (7), شفهي2 (8), شهر2 (9)
-                    // لكن للتنظيم سنعرض الحقول بشكل تسلسلي صحيح تماما كطلبك:
-                }
-                
-                // الترتيب الدقيق المطلوب للأعمدة الـ 12:
-                // [شفهي 1, شهر 1, شفهي 2, شهر 2, معدل فصل أول (4), نصف سنة (5), شفهي 1, شهر 1, شفهي 2, شهر 2, معدل فصل ثاني (10), السعي السنوي (11)]
-            }
-
-            // لندير بناء الحقول الـ 12 بدقة حسب طلبك:
-            // 0: شفهي 1
-            // 1: شهر 1
-            // 2: شفهي 2
-            // 3: شهر 2
-            // [معدل الفصل الأول - محسوب]
-            // 4: نصف السنة
-            // 5: شفهي 1 (ف2)
-            // 6: شهر 1 (ف2)
-            // 7: شفهي 2 (ف2)
-            // 8: شهر 2 (ف2)
-            // [معدل الفصل الثاني - محسوب]
-            // [السعي السنوي - محسوب]
-
-            // إعادة صياغة الـ 12 حقل لتكون مطابقة لطلبك بالحرف:
-            let g = st.grades;
-            // تخزين وترتيب مؤشرات الدرجات في مصفوفة st.grades الحجم 9 مدخلة يدوياً والباقي محسوب:
-            // g[0]: شفهي 1 (ف1)
-            // g[1]: شهر 1 (ف1)
-            // g[2]: شفهي 2 (ف1)
-            // g[3]: شهر 2 (ف1)
-            // g[4]: نصف السنة
-            // g[5]: شفهي 1 (ف2)
-            // g[6]: شهر 1 (ف2)
-            // g[7]: شفهي 2 (ف2)
-            // g[8]: شهر 2 (ف2)
-            
-            // حساب معدل ف1 من (g[0], g[1], g[2], g[3])
-            const mf1 = Math.round(((g[0]+g[1]+g[2]+g[3])/4)*10)/10;
-            // حساب معدل ف2 من (g[5], g[6], g[7], g[8])
-            const mf2 = Math.round(((g[5]+g[6]+g[7]+g[8])/4)*10)/10;
-            // السعي السنوي: (mf1 + g[4] (نصف السنة) + mf2) / 3
-            const saei = Math.round(((mf1 + g[4] + mf2)/3)*10)/10;
-
-            row.innerHTML = `
-                <td class="sticky-col-1">${toEasternArabicNumerals(idx + 1)}</td>
-                <td class="sticky-col-2"><input type="text" value="${st.name}" onchange="updateStudentName(${st.id}, this.value)" style="width:110px; border:none; background:transparent;"></td>
-                <td><input type="number" class="grade-input ${g[0]<50?'text-red':''}" value="${g[0]}" min="0" max="100" onchange="updateStudentGrade(${st.id}, 0, this.value)"></td>
-                <td><input type="number" class="grade-input ${g[1]<50?'text-red':''}" value="${g[1]}" min="0" max="100" onchange="updateStudentGrade(${st.id}, 1, this.value)"></td>
-                <td><input type="number" class="grade-input ${g[2]<50?'text-red':''}" value="${g[2]}" min="0" max="100" onchange="updateStudentGrade(${st.id}, 2, this.value)"></td>
-                <td><input type="number" class="grade-input ${g[3]<50?'text-red':''}" value="${g[3]}" min="0" max="100" onchange="updateStudentGrade(${st.id}, 3, this.value)"></td>
-                <td class="${mf1<50?'text-red':'text-black'}">${toEasternArabicNumerals(mf1)}</td>
-                <td><input type="number" class="grade-input ${g[4]<50?'text-red':''}" value="${g[4]}" min="0" max="100" onchange="updateStudentGrade(${st.id}, 4, this.value)"></td>
-                <td><input type="number" class="grade-input ${g[5]<50?'text-red':''}" value="${g[5]}" min="0" max="100" onchange="updateStudentGrade(${st.id}, 5, this.value)"></td>
-                <td><input type="number" class="grade-input ${g[6]<50?'text-red':''}" value="${g[6]}" min="0" max="100" onchange="updateStudentGrade(${st.id}, 6, this.value)"></td>
-                <td><input type="number" class="grade-input ${g[7]<50?'text-red':''}" value="${g[7]}" min="0" max="100" onchange="updateStudentGrade(${st.id}, 7, this.value)"></td>
-                <td><input type="number" class="grade-input ${g[8]<50?'text-red':''}" value="${g[8]}" min="0" max="100" onchange="updateStudentGrade(${st.id}, 8, this.value)"></td>
-                <td class="${mf2<50?'text-red':'text-black'}">${toEasternArabicNumerals(mf2)}</td>
-                <td class="${saei<50?'text-red':'text-black'}" style="font-weight:bold;">${toEasternArabicNumerals(saei)}</td>
-                <td><input type="text" value="${st.notes.join(' | ')}" onchange="updateNotes(${st.id}, this.value)" style="width:120px;"></td>
-                <td class="no-print"><button class="btn-danger" onclick="deleteStudent(${st.id})">حذف</button></td>
-            `;
-            tbody.appendChild(row);
-        });
-
-        // حساب النسب المئوية وتحت معدل الفصل الأول، نصف السنة، معدل الفصل الثاني، السعي السنوي
-        // معادلة النسبة: (عدد الناجحين / العدد الكلي) * 100 مقرب لأقرب عشرة
-        let p1Pct = totalStudents > 0 ? Math.round(((passT1 / totalStudents) * 100) * 10) / 10 : 0;
-        let pMidPct = totalStudents > 0 ? Math.round(((passMid / totalStudents) * 100) * 10) / 10 : 0;
-        let p2Pct = totalStudents > 0 ? Math.round(((passT2 / totalStudents) * 100) * 10) / 10 : 0;
-        let pAnnualPct = totalStudents > 0 ? Math.round(((passAnnual / totalStudents) * 100) * 10) / 10 : 0;
-
-        tfoot.innerHTML = `
-            <tr>
-                <td colspan="2" style="font-weight:bold;">عدد الناجحين</td>
-                <td colspan="4"></td>
-                <td style="color:var(--success); font-weight:bold;">${toEasternArabicNumerals(passT1)}</td>
-                <td style="color:var(--success); font-weight:bold;">${toEasternArabicNumerals(passMid)}</td>
-                <td colspan="4"></td>
-                <td style="color:var(--success); font-weight:bold;">${toEasternArabicNumerals(passT2)}</td>
-                <td style="color:var(--success); font-weight:bold;">${toEasternArabicNumerals(passAnnual)}</td>
-                <td colspan="2"></td>
-            </tr>
-            <tr>
-                <td colspan="2" style="font-weight:bold;">عدد الراسبين</td>
-                <td colspan="4"></td>
-                <td style="color:var(--danger); font-weight:bold;">${toEasternArabicNumerals(failT1)}</td>
-                <td style="color:var(--danger); font-weight:bold;">${toEasternArabicNumerals(failMid)}</td>
-                <td colspan="4"></td>
-                <td style="color:var(--danger); font-weight:bold;">${toEasternArabicNumerals(failT2)}</td>
-                <td style="color:var(--danger); font-weight:bold;">${toEasternArabicNumerals(failAnnual)}</td>
-                <td colspan="2"></td>
-            </tr>
-            <tr>
-                <td colspan="2" style="font-weight:bold;">النسبة المئوية للنجاح</td>
-                <td colspan="4"></td>
-                <td style="font-weight:bold;">${toEasternArabicNumerals(p1Pct)}%</td>
-                <td style="font-weight:bold;">${toEasternArabicNumerals(pMidPct)}%</td>
-                <td colspan="4"></td>
-                <td style="font-weight:bold;">${toEasternArabicNumerals(p2Pct)}%</td>
-                <td style="font-weight:bold;">${toEasternArabicNumerals(pAnnualPct)}%</td>
-                <td colspan="2"></td>
-            </tr>
-        `;
-    }
-
-    function updateNotes(studentId, text) {
-        const student = appData.students.find(s => s.id === studentId);
-        if(student) {
-            student.notes = [text];
-            saveData();
-        }
-    }
-
-    // ------------------- تبويب الاختبار اليومي (الشفهي) -------------------
-    let dailyQueue = [];
-    let currentDailyStudent = null;
-
-    function startDailyTest() {
-        if(appData.students.length === 0) {
-            alert("لا توجد أسماء طلاب مسجلة!");
-            return;
-        }
-        // ترتيب عشوائي للأسماء دون تكرار إلا بعد إكمال الكل
-        dailyQueue = [...appData.students].sort(() => Math.random() - 0.5);
-        nextDailyStudent();
-    }
-
-    function nextDailyStudent() {
-        if(dailyQueue.length === 0) {
-            alert("تم إكمال اختبار جميع الطلاب. سيتم إعادة تدوير الأسماء.");
-            dailyQueue = [...appData.students].sort(() => Math.random() - 0.5);
-        }
-        currentDailyStudent = dailyQueue.pop();
-        document.getElementById('dailyStudentName').innerText = currentDailyStudent.name;
-        document.getElementById('dailyGradeInput').value = '';
-    }
-
-    function saveDailyGrade() {
-        if(!currentDailyStudent) {
-            alert("يرجى البدء بالضغط على بدء الاختبار أولاً.");
-            return;
-        }
-        let val = parseFloat(document.getElementById('dailyGradeInput').value);
-        if(isNaN(val) || val < 0 || val > 100) {
-            alert("يرجى إدخال درجة صحيحة بين 0 و 100");
-            return;
-        }
-
-        const st = appData.students.find(s => s.id === currentDailyStudent.id);
-        if(st) {
-            // شروط الإضافة التلقائية للشفهي 1 و 2 للفصل الأول ثم الثاني
-            if(st.grades[0] === 0) {
-                st.grades[0] = val; // شفهي 1 ف1
-            } else if(st.grades[2] === 0) {
-                st.grades[2] = val; // شفهي 2 ف1 (بشرط امتلاء شفهي 1)
-            } else if(st.grades[5] === 0) {
-                st.grades[5] = val; // شفهي 1 ف2
-            } else if(st.grades[7] === 0) {
-                st.grades[7] = val; // شفهي 2 ف2
-            } else {
-                st.grades[0] = val; // تحديث افتراضي إن امتلت الكل
-            }
-            saveData();
-            renderStudentsTable();
-            alert("تم حفظ الدرجة وإضافتها للسجل تلقائياً!");
-            nextDailyStudent();
-        }
-    }
-
-    // ------------------- تبويب سجل الحضور والغياب -------------------
-    let attIndex = 0;
-    let todayAttendance = { present: [], absent: [] };
-
-    function initAttendance() {
-        attIndex = 0;
-        todayAttendance = { present: [], absent: [] };
-        renderAttendanceStep();
-    }
-
-    function renderAttendanceStep() {
-        const container = document.getElementById('attendanceContainer');
-        const reportDiv = document.getElementById('attendanceReport');
-        reportDiv.innerHTML = '';
-
-        if(appData.students.length === 0) {
-            container.innerHTML = "<p>لا توجد أسماء مسجلة.</p>";
-            return;
-        }
-
-        if(attIndex >= appData.students.length) {
-            // انتهى التسجيل وعرض التقرير
-            container.innerHTML = `<h3>انتهى تسجيل الحضور لهذا اليوم</h3>`;
-            
-            let presentNames = todayAttendance.present.map(id => appData.students.find(s=>s.id===id).name);
-            let absentNames = todayAttendance.absent.map(id => appData.students.find(s=>s.id===id).name);
-
-            reportDiv.innerHTML = `
-                <div style="background:white; padding:15px; border-radius:8px;">
-                    <h3 style="color:var(--success);">الطلاب الحاضرون (${presentNames.length}):</h3>
-                    <p style="color:var(--success); font-weight:bold;">${presentNames.join(', ') || 'لا يوجد'}</p>
-                    <h3 style="color:var(--danger);">الطلاب الغائبون (${absentNames.length}):</h3>
-                    <p style="color:var(--danger); font-weight:bold;">${absentNames.join(', ') || 'لا يوجد'}</p>
-                </div>
-            `;
-
-            // تخزين في سجل الغياب وحفظ بالتاريخ والوقت في ملف كل طالب (الملاحظات)
-            const todayStr = new Date().toISOString().split('T')[0];
-            const timeStr = new Date().toLocaleTimeString();
-            appData.attendanceLogs[todayStr] = todayAttendance;
-
-            todayAttendance.absent.forEach(id => {
-                const st = appData.students.find(s => s.id === id);
-                if(st) {
-                    st.notes.push(`غائب في ${todayStr} (${timeStr})`);
-                }
-            });
-            saveData();
-            return;
-        }
-
-        const currentSt = appData.students[attIndex];
-        container.innerHTML = `
-            <h3 style="font-size: 26px; color: var(--primary);">${currentSt.name}</h3>
-            <p>الطالب رقم ${toEasternArabicNumerals(attIndex + 1)} من ${toEasternArabicNumerals(appData.students.length)}</p>
-            <button onclick="markAttendance(${currentSt.id}, 'present')" class="btn-success" style="padding: 10px 30px; font-size:18px; margin: 10px;">حاضر ✓</button>
-            <button onclick="markAttendance(${currentSt.id}, 'absent')" class="btn-danger" style="padding: 10px 30px; font-size:18px; margin: 10px;">غائب ✗</button>
-        `;
-    }
-
-    function markAttendance(studentId, status) {
-        if(status === 'present') {
-            todayAttendance.present.push(studentId);
-        } else {
-            todayAttendance.absent.push(studentId);
-        }
-        attIndex++;
-        renderAttendanceStep();
-    }
-
-    function prevAttendanceStudent() {
-        if(attIndex > 0) {
-            attIndex--;
-            // إزالة آخر حالة مسجلة
-            todayAttendance.present = todayAttendance.present.filter(id => id !== appData.students[attIndex].id);
-            todayAttendance.absent = todayAttendance.absent.filter(id => id !== appData.students[attIndex].id);
-            renderAttendanceStep();
-        }
-    }
-
-    // ------------------- تبويب سجل الغياب والصور -------------------
-    function renderAbsentRecords() {
-        const dateVal = document.getElementById('recordDateFilter').value;
-        const contentDiv = document.getElementById('absentRecordsContent');
-        
-        const log = appData.attendanceLogs[dateVal];
-        const img = appData.recordImages[dateVal];
-
-        if(!log) {
-            contentDiv.innerHTML = `<p>لا توجد سجلات حضور مسجلة لهذا التاريخ (${dateVal}).</p>`;
-            return;
-        }
-
-        let absentNames = log.absent.map(id => {
-            const st = appData.students.find(s => s.id === id);
-            return st ? st.name : '';
-        }).filter(n => n);
-
-        let presentNames = log.present.map(id => {
-            const st = appData.students.find(s => s.id === id);
-            return st ? st.name : '';
-        }).filter(n => n);
-
-        contentDiv.innerHTML = `
-            <h3>تاريخ السجل: ${dateVal}</h3>
-            <p style="color:var(--success);"><strong>الحاضرون (${presentNames.length}):</strong> ${presentNames.join(', ') || 'لا يوجد'}</p>
-            <p style="color:var(--danger);"><strong>الغائبون (${absentNames.length}):</strong> ${absentNames.join(', ') || 'لا يوجد'}</p>
-            <div>
-                <strong>الصورة المرفقة بالسجل:</strong><br>
-                ${img ? `<img src="${img}" style="max-width: 200px; border-radius: 5px; margin-top: 10px;" alt="صورة السجل">` : '<p>لا توجد صورة مرفقة لهذا التاريخ.</p>'}
+    <!-- الترويسة المعدلة -->
+    <header>
+        <div class="header-info">
+            <div class="school-title" id="displaySchoolName">مدرسة الإبداع الابتدائية</div>
+            <div class="sub-header-info">
+                <span>المعلم: <strong id="displayTeacherName">أحمد محمد</strong></span>
+                <span>المادة: <strong id="displaySubjectName">الرياضيات</strong></span>
             </div>
-        `;
-    }
+        </div>
+        <div class="logo-container">
+            <img id="logoPreviewImg" src="" class="logo-preview" style="display:none;" alt="الشعار">
+            <div id="logoPlaceholder" class="logo-preview">الشعار</div>
+            <label class="logo-upload-btn">
+                إضافة شعار
+                <input type="file" id="logoInput" accept="image/*" onchange="loadLogo(event)">
+            </label>
+        </div>
+    </header>
 
-    function attachImageToRecord() {
-        const fileInput = document.getElementById('recordCameraInput');
-        const dateVal = document.getElementById('recordDateFilter').value;
-        const file = fileInput.files[0];
+    <!-- شريط التنقل -->
+    <nav>
+        <button class="active" onclick="switchTab('home')">الصفحة الرئيسية</button>
+        <button onclick="switchTab('students')">الأسماء والدرجات</button>
+        <button onclick="switchTab('daily')">الاختبار اليومي</button>
+        <button onclick="switchTab('settings')">الإعدادات</button>
+    </nav>
 
-        if(!file) {
-            alert("يرجى اختيار صورة أولاً.");
-            return;
+    <!-- المحتوى الرئيسي -->
+    <div class="main-container">
+        
+        <!-- الصفحة الرئيسية -->
+        <div id="home" class="tab-content active">
+            <div class="card">
+                <h3>لوحة التحكم السريعة</h3>
+                <p>مرحباً بك في سجل المدرس المتطور. يمكنك من هنا متابعة المراحل الدراسية، والطلاب، ورصد الدرجات بكل سهولة.</p>
+            </div>
+            
+            <div class="card">
+                <h3>إعداد المرحلة والشعبة (كتابة حرة)</h3>
+                <div class="form-group">
+                    <label>المرحلة الدراسية:</label>
+                    <input type="text" id="inputGrade" class="form-control" placeholder="مثال: الصف الأول الابتدائي" value="الصف الأول الابتدائي">
+                </div>
+                <div class="form-group">
+                    <label>الشعبة:</label>
+                    <input type="text" id="inputClassRoom" class="form-control" placeholder="مثال: أ / ب" value="أ">
+                </div>
+                <button class="btn btn-success" onclick="saveGradeAndClass()">حفظ التعديل</button>
+            </div>
+        </div>
+
+        <!-- الأسماء والدرجات -->
+        <div id="students" class="tab-content">
+            <div class="card">
+                <h3>إدارة الطلاب والدرجات</h3>
+                <div class="form-group">
+                    <label>اسم الطالب الجديد:</label>
+                    <input type="text" id="newStudentName" class="form-control" placeholder="أدخل اسم الطالب...">
+                </div>
+                <button class="btn" onclick="addStudent()">إضافة الطالب</button>
+
+                <table style="margin-top: 20px;">
+                    <thead>
+                        <tr>
+                            <th>م</th>
+                            <th>اسم الطالب</th>
+                            <th>الدرجة</th>
+                            <th>إجراء</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentsTableBody">
+                        <!-- بيانات تجريبية -->
+                        <tr>
+                            <td>1</td>
+                            <td>محمد علي</td>
+                            <td>95</td>
+                            <td><button class="btn btn-danger" style="padding: 4px 10px; font-size: 0.8rem;">حذف</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- الاختبار اليومي -->
+        <div id="daily" class="tab-content">
+            <div class="card">
+                <h3>سجل الاختبار اليومي والمشاركات</h3>
+                <p>قم بتسجيل تقييمات الطلاب اليومية بسرعة وسهولة.</p>
+            </div>
+        </div>
+
+        <!-- الإعدادات -->
+        <div id="settings" class="tab-content">
+            <div class="card">
+                <h3>إعدادات المدرسة والمدرس</h3>
+                <div class="form-group">
+                    <label>اسم المدرسة:</label>
+                    <input type="text" id="settingsSchool" class="form-control" value="مدرسة الإبداع الابتدائية">
+                </div>
+                <div class="form-group">
+                    <label>اسم المدرس:</label>
+                    <input type="text" id="settingsTeacher" class="form-control" value="أحمد محمد">
+                </div>
+                <div class="form-group">
+                    <label>المادة الدراسية:</label>
+                    <input type="text" id="settingsSubject" class="form-control" value="الرياضيات">
+                </div>
+                <button class="btn btn-success" onclick="updateHeaderInfo()">حفظ إعدادات الهيدر</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
         }
 
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            appData.recordImages[dateVal] = event.target.result;
-            saveData();
-            renderAbsentRecords();
-            alert("تم حفظ الصورة بنجاح مع السجل!");
-        };
-        reader.readAsDataURL(file);
-    }
+        function loadLogo(event) {
+            const reader = new FileReader();
+            reader.onload = function(){
+                const output = document.getElementById('logoPreviewImg');
+                output.src = reader.result;
+                output.style.display = 'block';
+                document.getElementById('logoPlaceholder').style.display = 'none';
+                localStorage.setItem('schoolLogo', reader.result);
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
 
-    // ------------------- النسخ الاحتياطي والسحابي -------------------
-    function exportJSON() {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData));
-        const dlAnchor = document.createElement('a');
-        dlAnchor.setAttribute("href", dataStr);
-        dlAnchor.setAttribute("download", "teacher_records_backup.json");
-        document.body.appendChild(dlAnchor);
-        dlAnchor.click();
-        dlAnchor.remove();
-    }
+        function updateHeaderInfo() {
+            const school = document.getElementById('settingsSchool').value;
+            const teacher = document.getElementById('settingsTeacher').value;
+            const subject = document.getElementById('settingsSubject').value;
 
-    function importJSON(e) {
-        const file = e.target.files[0];
-        if(!file) return;
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            try {
-                appData = JSON.parse(event.target.result);
-                saveData();
-                location.reload();
-                alert("تم استيراد البيانات بنجاح!");
-            } catch(err) {
-                alert("ملف غير صالح!");
+            document.getElementById('displaySchoolName').innerText = school;
+            document.getElementById('displayTeacherName').innerText = teacher;
+            document.getElementById('displaySubjectName').innerText = subject;
+
+            localStorage.setItem('schoolName', school);
+            localStorage.setItem('teacherName', teacher);
+            localStorage.setItem('subjectName', subject);
+
+            alert('تم تحديث البيانات بنجاح!');
+        }
+
+        function saveGradeAndClass() {
+            const grade = document.getElementById('inputGrade').value;
+            const classroom = document.getElementById('inputClassRoom').value;
+            localStorage.setItem('currentGrade', grade);
+            localStorage.setItem('currentClass', classroom);
+            alert('تم حفظ المرحلة والشعبة بنجاح: ' + grade + ' - شعبة ' + classroom);
+        }
+
+        function addStudent() {
+            const nameInput = document.getElementById('newStudentName');
+            if(!nameInput.value) return;
+            const tbody = document.getElementById('studentsTableBody');
+            const rowCount = tbody.rows.length + 1;
+            const row = tbody.insertRow();
+            row.innerHTML = `<td>${rowCount}</td><td>${nameInput.value}</td><td><input type="number" class="form-control" style="width:70px; padding:4px;" value="0"></td><td><button class="btn btn-danger" style="padding: 4px 10px; font-size: 0.8rem;" onclick="this.parentElement.parentElement.remove()">حذف</button></td>`;
+            nameInput.value = '';
+        }
+
+        // استرجاع البيانات المحفوظة عند التحميل
+        window.onload = function() {
+            if(localStorage.getItem('schoolName')) {
+                document.getElementById('displaySchoolName').innerText = localStorage.getItem('schoolName');
+                document.getElementById('settingsSchool').value = localStorage.getItem('schoolName');
             }
-        };
-        reader.readAsText(file);
-    }
-
-    function toggleCloudSync() {
-        const active = document.getElementById('cloudToggle').checked;
-        if(active) {
-            alert("تم تفعيل النسخ السحابي التلقائي.");
-        } else {
-            alert("تم إيقاف النسخ السحابي (يعمل البرنامج محلياً).");
+            if(localStorage.getItem('teacherName')) {
+                document.getElementById('displayTeacherName').innerText = localStorage.getItem('teacherName');
+                document.getElementById('settingsTeacher').value = localStorage.getItem('teacherName');
+            }
+            if(localStorage.getItem('subjectName')) {
+                document.getElementById('displaySubjectName').innerText = localStorage.getItem('subjectName');
+                document.getElementById('settingsSubject').value = localStorage.getItem('subjectName');
+            }
+            if(localStorage.getItem('schoolLogo')) {
+                const output = document.getElementById('logoPreviewImg');
+                output.src = localStorage.getItem('schoolLogo');
+                output.style.display = 'block';
+                document.getElementById('logoPlaceholder').style.display = 'none';
+            }
+            if(localStorage.getItem('currentGrade')) {
+                document.getElementById('inputGrade').value = localStorage.getItem('currentGrade');
+            }
+            if(localStorage.getItem('currentClass')) {
+                document.getElementById('inputClassRoom').value = localStorage.getItem('currentClass');
+            }
         }
-    }
-
-    // مراقبة الاتصال بالإنترنت
-    window.addEventListener('online', () => {
-        document.getElementById('netStatus').innerText = "متصل بالإنترنت 🌐";
-        document.getElementById('netStatus').style.color = "green";
-    });
-    window.addEventListener('offline', () => {
-        document.getElementById('netStatus').innerText = "غير متصل (يعمل محلياً) 📴";
-        document.getElementById('netStatus').style.color = "orange";
-    });
-</script>
-
+    </script>
 </body>
 </html>
