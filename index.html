@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>برنامج سجل المدرس</title>
-    <!-- خط العرض -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -255,8 +254,28 @@
 
     <div class="main-container">
         
-        <!-- الصفحة الرئيسية (البحث عن طالب فقط بدون البطاقات المحذوفة) -->
+        <!-- الصفحة الرئيسية -->
         <div id="home" class="tab-content active">
+            
+            <!-- بطاقة إعداد المرحلة والشعبة (كتابة حرة مع إمكانية التعديل والحذف والاضافة) -->
+            <div class="card">
+                <h3>إعداد المرحلة والشعبة (كتابة حرة)</h3>
+                <div class="form-group">
+                    <label>المرحلة الدراسية:</label>
+                    <input type="text" id="classStageInput" class="form-control" placeholder="أدخل المرحلة الدراسية...">
+                </div>
+                <div class="form-group">
+                    <label>الشعبة:</label>
+                    <input type="text" id="classDivisionInput" class="form-control" placeholder="أدخل الشعبة...">
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-success" onclick="saveStageDivision()">حفظ وتحديث</button>
+                    <button class="btn btn-danger" onclick="confirmDeleteStageDivision()">حذف البيانات</button>
+                </div>
+                <p id="currentStageDisplay" style="margin-top: 10px; font-weight: 600; color: var(--secondary);"></p>
+            </div>
+
+            <!-- بطاقة البحث عن طالب -->
             <div class="card">
                 <h3>البحث عن طالب</h3>
                 <div class="form-group">
@@ -303,7 +322,7 @@
                             <td>محمد علي</td>
                             <td>95</td>
                             <td>جيد جداً</td>
-                            <td><button class="btn btn-danger" style="padding: 2px 8px; font-size: 0.8rem;" onclick="this.parentElement.parentElement.remove(); saveStudentsToStorage();">حذف</button></td>
+                            <td><button class="btn btn-danger" style="padding: 2px 8px; font-size: 0.8rem;" onclick="confirmDeleteStudent(this)">حذف</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -377,6 +396,43 @@
             alert('تم الحفظ بنجاح');
         }
 
+        function saveStageDivision() {
+            const stage = document.getElementById('classStageInput').value;
+            const division = document.getElementById('classDivisionInput').value;
+            
+            if(!stage && !division) {
+                alert('الرجاء إدخال المرحلة أو الشعبة');
+                return;
+            }
+
+            localStorage.setItem('classStage', stage);
+            localStorage.setItem('classDivision', division);
+            updateStageDisplay();
+            alert('تم حفظ وتحديث المرحلة والشعبة بنجاح');
+        }
+
+        function updateStageDisplay() {
+            const stage = localStorage.getItem('classStage') || '';
+            const division = localStorage.getItem('classDivision') || '';
+            const display = document.getElementById('currentStageDisplay');
+            if(stage || division) {
+                display.innerText = `المرحلة الحالية: ${stage} - الشعبة: ${division}`;
+            } else {
+                display.innerText = '';
+            }
+        }
+
+        function confirmDeleteStageDivision() {
+            if(confirm('هل أنت متأكد من رغبتك في حذف بيانات المرحلة والشعبة؟')) {
+                localStorage.removeItem('classStage');
+                localStorage.removeItem('classDivision');
+                document.getElementById('classStageInput').value = '';
+                document.getElementById('classDivisionInput').value = '';
+                updateStageDisplay();
+                alert('تم الحذف بنجاح');
+            }
+        }
+
         function addStudent() {
             const nameInput = document.getElementById('newStudentName');
             const degreeInput = document.getElementById('newStudentDegree');
@@ -390,13 +446,20 @@
             const tbody = document.getElementById('studentsTableBody');
             const rowCount = tbody.rows.length + 1;
             const row = tbody.insertRow();
-            row.innerHTML = `<td>${rowCount}</td><td>${nameInput.value}</td><td>${degreeInput.value || 0}</td><td>${noteInput.value || '-'}</td><td><button class="btn btn-danger" style="padding: 2px 8px; font-size: 0.8rem;" onclick="this.parentElement.parentElement.remove(); saveStudentsToStorage();">حذف</button></td>`;
+            row.innerHTML = `<td>${rowCount}</td><td>${nameInput.value}</td><td>${degreeInput.value || 0}</td><td>${noteInput.value || '-'}</td><td><button class="btn btn-danger" style="padding: 2px 8px; font-size: 0.8rem;" onclick="confirmDeleteStudent(this)">حذف</button></td>`;
             
             saveStudentsToStorage();
             nameInput.value = '';
             degreeInput.value = '';
             noteInput.value = '';
             alert('تمت إضافة الطالب');
+        }
+
+        function confirmDeleteStudent(btn) {
+            if(confirm('هل أنت متأكد من حذف هذا الطالب؟')) {
+                btn.parentElement.parentElement.remove();
+                saveStudentsToStorage();
+            }
         }
 
         function saveStudentsToStorage() {
@@ -462,6 +525,13 @@
             if(localStorage.getItem('savedStudentsHTML')) {
                 document.getElementById('studentsTableBody').innerHTML = localStorage.getItem('savedStudentsHTML');
             }
+            if(localStorage.getItem('classStage')) {
+                document.getElementById('classStageInput').value = localStorage.getItem('classStage');
+            }
+            if(localStorage.getItem('classDivision')) {
+                document.getElementById('classDivisionInput').value = localStorage.getItem('classDivision');
+            }
+            updateStageDisplay();
         }
     </script>
 </body>
