@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سجل المدرس المتطور</title>
+    <title>برنامج سجل المدرس</title>
     <!-- خط العرض -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #1e3a8a;
-            --secondary: #3b82f6;
-            --accent: #10b981;
-            --danger: #ef4444;
-            --bg: #f8fafc;
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #2ecc71;
+            --danger: #e74c3c;
+            --bg: #f4f6f7;
             --card-bg: #ffffff;
-            --text: #1e293b;
-            --border: #cbd5e1;
+            --text: #2c3e50;
+            --border: #bdc3c7;
         }
 
         * {
@@ -37,13 +37,12 @@
         }
 
         header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background-color: var(--primary);
             color: white;
             padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
             width: 100%;
         }
 
@@ -54,14 +53,12 @@
         }
 
         .school-title {
-            font-size: 1.5rem;
-            font-weight: 900;
-            letter-spacing: 0.5px;
+            font-size: 1.4rem;
+            font-weight: 700;
         }
 
         .sub-header-info {
-            font-size: 0.95rem;
-            font-weight: 600;
+            font-size: 0.9rem;
             opacity: 0.9;
             display: flex;
             gap: 15px;
@@ -75,8 +72,8 @@
         }
 
         .logo-preview {
-            width: 55px;
-            height: 55px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid white;
@@ -84,18 +81,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 10px;
+            font-size: 9px;
             color: #64748b;
             text-align: center;
         }
 
         .logo-upload-btn {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             background: rgba(255,255,255,0.2);
-            padding: 2px 8px;
+            padding: 2px 6px;
             border-radius: 4px;
             cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.4);
         }
 
         .logo-upload-btn input {
@@ -109,26 +105,23 @@
             padding: 10px;
             gap: 10px;
             border-bottom: 1px solid var(--border);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
             width: 100%;
         }
 
         nav button {
-            background: #f1f5f9;
+            background: #ecf0f1;
             border: none;
-            padding: 10px 18px;
-            border-radius: 8px;
+            padding: 8px 16px;
+            border-radius: 6px;
             font-weight: 600;
             cursor: pointer;
             white-space: nowrap;
-            transition: all 0.3s ease;
-            color: #475569;
+            color: #34495e;
         }
 
         nav button.active {
-            background: var(--primary);
+            background: var(--secondary);
             color: white;
-            box-shadow: 0 2px 4px rgba(30,58,138,0.3);
         }
 
         .main-container {
@@ -141,32 +134,26 @@
 
         .tab-content {
             display: none;
-            animation: fadeIn 0.4s ease-in-out;
         }
 
         .tab-content.active {
             display: block;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
         .card {
             background: var(--card-bg);
-            border-radius: 12px;
+            border-radius: 8px;
             padding: 20px;
             margin-bottom: 20px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
-            border: 1px solid #e2e8f0;
+            border: 1px solid #dcdde1;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
         .card h3 {
             margin-bottom: 15px;
             color: var(--primary);
-            font-size: 1.2rem;
-            border-bottom: 2px solid #f1f5f9;
+            font-size: 1.1rem;
+            border-bottom: 1px solid #eee;
             padding-bottom: 8px;
         }
 
@@ -176,39 +163,32 @@
 
         .form-group label {
             display: block;
-            margin-bottom: 6px;
+            margin-bottom: 5px;
             font-weight: 600;
             font-size: 0.9rem;
         }
 
         .form-control {
             width: 100%;
-            padding: 10px 14px;
+            padding: 8px 12px;
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 6px;
             font-size: 1rem;
             outline: none;
-            transition: border-color 0.2s;
         }
 
         .form-control:focus {
             border-color: var(--secondary);
-            box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
         }
 
         .btn {
             background: var(--secondary);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 8px 16px;
+            border-radius: 6px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn:hover {
-            opacity: 0.9;
         }
 
         .btn-danger {
@@ -224,44 +204,30 @@
             border-collapse: collapse;
             margin-top: 10px;
             background: white;
-            border-radius: 8px;
-            overflow: hidden;
         }
 
         th, td {
-            padding: 12px 15px;
+            padding: 10px;
             text-align: right;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid #ddd;
         }
 
         th {
-            background: #f1f5f9;
+            background: #ecf0f1;
             color: var(--primary);
-            font-weight: 700;
         }
 
-        @media (max-width: 768px) {
-            header {
-                flex-direction: row;
-                padding: 10px 15px;
-            }
-            .school-title {
-                font-size: 1.2rem;
-            }
-            .sub-header-info {
-                font-size: 0.8rem;
-                flex-direction: column;
-                gap: 2px;
-            }
-            .main-container {
-                padding: 10px;
-            }
+        .search-result-box {
+            background: #fdfefe;
+            border: 1px solid #a9cce3;
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 12px;
         }
     </style>
 </head>
 <body>
 
-    <!-- الترويسة المعدلة -->
     <header>
         <div class="header-info">
             <div class="school-title" id="displaySchoolName">مدرسة الإبداع الابتدائية</div>
@@ -280,7 +246,6 @@
         </div>
     </header>
 
-    <!-- شريط التنقل -->
     <nav>
         <button class="active" onclick="switchTab('home')">الصفحة الرئيسية</button>
         <button onclick="switchTab('students')">الأسماء والدرجات</button>
@@ -288,27 +253,19 @@
         <button onclick="switchTab('settings')">الإعدادات</button>
     </nav>
 
-    <!-- المحتوى الرئيسي -->
     <div class="main-container">
         
-        <!-- الصفحة الرئيسية -->
+        <!-- الصفحة الرئيسية (البحث عن طالب فقط بدون البطاقات المحذوفة) -->
         <div id="home" class="tab-content active">
             <div class="card">
-                <h3>لوحة التحكم السريعة</h3>
-                <p>مرحباً بك في سجل المدرس المتطور. يمكنك من هنا متابعة المراحل الدراسية، والطلاب، ورصد الدرجات بكل سهولة.</p>
-            </div>
-            
-            <div class="card">
-                <h3>إعداد المرحلة والشعبة (كتابة حرة)</h3>
+                <h3>البحث عن طالب</h3>
                 <div class="form-group">
-                    <label>المرحلة الدراسية:</label>
-                    <input type="text" id="inputGrade" class="form-control" placeholder="مثال: الصف الأول الابتدائي" value="الصف الأول الابتدائي">
+                    <label>اسم الطالب:</label>
+                    <input type="text" id="searchStudentInput" class="form-control" placeholder="ابحث باسم الطالب...">
                 </div>
-                <div class="form-group">
-                    <label>الشعبة:</label>
-                    <input type="text" id="inputClassRoom" class="form-control" placeholder="مثال: أ / ب" value="أ">
-                </div>
-                <button class="btn btn-success" onclick="saveGradeAndClass()">حفظ التعديل</button>
+                <button class="btn" onclick="searchStudent()">بحث</button>
+
+                <div id="searchResultContainer"></div>
             </div>
         </div>
 
@@ -320,24 +277,33 @@
                     <label>اسم الطالب الجديد:</label>
                     <input type="text" id="newStudentName" class="form-control" placeholder="أدخل اسم الطالب...">
                 </div>
+                <div class="form-group">
+                    <label>الدرجة:</label>
+                    <input type="number" id="newStudentDegree" class="form-control" placeholder="أدخل الدرجة...">
+                </div>
+                <div class="form-group">
+                    <label>ملاحظات:</label>
+                    <input type="text" id="newStudentNote" class="form-control" placeholder="ملاحظات الطالب...">
+                </div>
                 <button class="btn" onclick="addStudent()">إضافة الطالب</button>
 
-                <table style="margin-top: 20px;">
+                <table style="margin-top: 15px;">
                     <thead>
                         <tr>
                             <th>م</th>
                             <th>اسم الطالب</th>
                             <th>الدرجة</th>
+                            <th>الملاحظات</th>
                             <th>إجراء</th>
                         </tr>
                     </thead>
                     <tbody id="studentsTableBody">
-                        <!-- بيانات تجريبية -->
                         <tr>
                             <td>1</td>
                             <td>محمد علي</td>
                             <td>95</td>
-                            <td><button class="btn btn-danger" style="padding: 4px 10px; font-size: 0.8rem;">حذف</button></td>
+                            <td>جيد جداً</td>
+                            <td><button class="btn btn-danger" style="padding: 2px 8px; font-size: 0.8rem;" onclick="this.parentElement.parentElement.remove(); saveStudentsToStorage();">حذف</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -348,14 +314,14 @@
         <div id="daily" class="tab-content">
             <div class="card">
                 <h3>سجل الاختبار اليومي والمشاركات</h3>
-                <p>قم بتسجيل تقييمات الطلاب اليومية بسرعة وسهولة.</p>
+                <p>قريباً تفاصيل الاختبار اليومي.</p>
             </div>
         </div>
 
         <!-- الإعدادات -->
         <div id="settings" class="tab-content">
             <div class="card">
-                <h3>إعدادات المدرسة والمدرس</h3>
+                <h3>إعدادات الهيدر</h3>
                 <div class="form-group">
                     <label>اسم المدرسة:</label>
                     <input type="text" id="settingsSchool" class="form-control" value="مدرسة الإبداع الابتدائية">
@@ -368,7 +334,7 @@
                     <label>المادة الدراسية:</label>
                     <input type="text" id="settingsSubject" class="form-control" value="الرياضيات">
                 </div>
-                <button class="btn btn-success" onclick="updateHeaderInfo()">حفظ إعدادات الهيدر</button>
+                <button class="btn btn-success" onclick="updateHeaderInfo()">حفظ التعديلات</button>
             </div>
         </div>
 
@@ -408,28 +374,72 @@
             localStorage.setItem('teacherName', teacher);
             localStorage.setItem('subjectName', subject);
 
-            alert('تم تحديث البيانات بنجاح!');
-        }
-
-        function saveGradeAndClass() {
-            const grade = document.getElementById('inputGrade').value;
-            const classroom = document.getElementById('inputClassRoom').value;
-            localStorage.setItem('currentGrade', grade);
-            localStorage.setItem('currentClass', classroom);
-            alert('تم حفظ المرحلة والشعبة بنجاح: ' + grade + ' - شعبة ' + classroom);
+            alert('تم الحفظ بنجاح');
         }
 
         function addStudent() {
             const nameInput = document.getElementById('newStudentName');
-            if(!nameInput.value) return;
+            const degreeInput = document.getElementById('newStudentDegree');
+            const noteInput = document.getElementById('newStudentNote');
+
+            if(!nameInput.value) {
+                alert('الرجاء إدخال اسم الطالب');
+                return;
+            }
+
             const tbody = document.getElementById('studentsTableBody');
             const rowCount = tbody.rows.length + 1;
             const row = tbody.insertRow();
-            row.innerHTML = `<td>${rowCount}</td><td>${nameInput.value}</td><td><input type="number" class="form-control" style="width:70px; padding:4px;" value="0"></td><td><button class="btn btn-danger" style="padding: 4px 10px; font-size: 0.8rem;" onclick="this.parentElement.parentElement.remove()">حذف</button></td>`;
+            row.innerHTML = `<td>${rowCount}</td><td>${nameInput.value}</td><td>${degreeInput.value || 0}</td><td>${noteInput.value || '-'}</td><td><button class="btn btn-danger" style="padding: 2px 8px; font-size: 0.8rem;" onclick="this.parentElement.parentElement.remove(); saveStudentsToStorage();">حذف</button></td>`;
+            
+            saveStudentsToStorage();
             nameInput.value = '';
+            degreeInput.value = '';
+            noteInput.value = '';
+            alert('تمت إضافة الطالب');
         }
 
-        // استرجاع البيانات المحفوظة عند التحميل
+        function saveStudentsToStorage() {
+            const tbody = document.getElementById('studentsTableBody');
+            localStorage.setItem('savedStudentsHTML', tbody.innerHTML);
+        }
+
+        function searchStudent() {
+            const query = document.getElementById('searchStudentInput').value.trim().toLowerCase();
+            const container = document.getElementById('searchResultContainer');
+            container.innerHTML = '';
+
+            if(!query) {
+                container.innerHTML = '<p style="color:red; margin-top:10px;">الرجاء كتابة اسم للبحث.</p>';
+                return;
+            }
+
+            const tbody = document.getElementById('studentsTableBody');
+            const rows = tbody.rows;
+            let found = false;
+
+            for(let i = 0; i < rows.length; i++) {
+                const name = rows[i].cells[1].innerText.toLowerCase();
+                if(name.includes(query)) {
+                    const degree = rows[i].cells[2].innerText;
+                    const note = rows[i].cells[3].innerText;
+
+                    container.innerHTML += `
+                        <div class="search-result-box">
+                            <h4 style="color:var(--primary); margin-bottom: 5px;">اسم الطالب: ${rows[i].cells[1].innerText}</h4>
+                            <p><strong>الدرجة:</strong> ${degree}</p>
+                            <p><strong>الملاحظات:</strong> ${note}</p>
+                        </div>
+                    `;
+                    found = true;
+                }
+            }
+
+            if(!found) {
+                container.innerHTML = '<p style="color:gray; margin-top:10px;">لم يتم العثور على نتائج.</p>';
+            }
+        }
+
         window.onload = function() {
             if(localStorage.getItem('schoolName')) {
                 document.getElementById('displaySchoolName').innerText = localStorage.getItem('schoolName');
@@ -449,11 +459,8 @@
                 output.style.display = 'block';
                 document.getElementById('logoPlaceholder').style.display = 'none';
             }
-            if(localStorage.getItem('currentGrade')) {
-                document.getElementById('inputGrade').value = localStorage.getItem('currentGrade');
-            }
-            if(localStorage.getItem('currentClass')) {
-                document.getElementById('inputClassRoom').value = localStorage.getItem('currentClass');
+            if(localStorage.getItem('savedStudentsHTML')) {
+                document.getElementById('studentsTableBody').innerHTML = localStorage.getItem('savedStudentsHTML');
             }
         }
     </script>
